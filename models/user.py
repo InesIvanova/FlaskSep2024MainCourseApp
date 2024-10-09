@@ -11,7 +11,7 @@ class UserModel(db.Model):
     password: Mapped[str] = mapped_column(db.String(255), nullable=False)
     first_name: Mapped[str] = mapped_column(db.String(255), nullable=False)
     last_name: Mapped[str] = mapped_column(db.String(255), nullable=False)
-    phone: Mapped[str] = mapped_column(db.String(13))
+    phone: Mapped[str] = mapped_column(db.String(13), server_default="Undefined", default="Undefined")
     role: Mapped[RoleType] = mapped_column(
         db.Enum(RoleType), default=RoleType.complainer.name, nullable=False
     )

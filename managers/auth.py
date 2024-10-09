@@ -39,3 +39,6 @@ def verify_token(token):
         return db.session.execute(db.select(UserModel).filter_by(id=user_id)).scalar()
     except Exception:
         raise Unauthorized("Invalid or missing token")
+
+
+
