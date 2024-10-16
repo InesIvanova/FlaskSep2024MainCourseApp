@@ -16,3 +16,4 @@ class UserModel(db.Model):
         db.Enum(RoleType), default=RoleType.complainer.name, nullable=False
     )
     certificate = db.Column(db.String(255))
+    iban: Mapped[str] = db.Column(db.String(225), nullable=False, default="BG80BNBG96611020345678", server_default="BG80BNBG96611020345678")

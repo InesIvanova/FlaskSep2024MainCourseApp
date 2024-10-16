@@ -13,6 +13,7 @@ class UserRegisterSchema(UserLoginSchema):
     first_name = fields.String(required=True)
     last_name = fields.String(required=True)
     phone = fields.String()
+    iban = fields.String(required=True)
 
 
 class UserCreateRequestSchema(UserRegisterSchema):
