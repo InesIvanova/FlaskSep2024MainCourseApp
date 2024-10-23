@@ -1,12 +1,23 @@
+import os
+import uuid
+from datetime import datetime
+
 from werkzeug.exceptions import Unauthorized, NotFound
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from constants import TEMP_FILE_FOLDER
 from db import db
 from managers.auth import AuthManager
 from models import RoleType, UserModel, ComplaintModel, State, TransactionModel
+from services.s3 import S3Service
+from services.ses import SESService
 from services.wise import WiseService
+from util.helpers import decode_photo
 
 wise_service = WiseService()
+s3 = S3Service()
+ses = SESService()
+
 
 class ComplainerManager:
     @staticmethod
@@ -24,7 +35,15 @@ class ComplainerManager:
         complainer_data["role"] = RoleType.complainer.name
         user = UserModel(**complainer_data)
         db.session.add(user)
-        db.session.flush()
+        try:
+            db.session.flush()
+        except Exception as ex:
+            a = 5
+        ses.send_email(
+            recipient=complainer_data["email"],
+            subject=f"Welcome, {complainer_data['first_name']} {complainer_data['last_name']}",
+            content="Welcome to our complain system. You can now login and submit complains!"
+        )
         return AuthManager.encode_token(user)
 
     @staticmethod
@@ -37,6 +56,13 @@ class ComplainerManager:
     @staticmethod
     def create(user, data):
         data["complainer_id"] = user.id
+        photo = data.pop("photo")
+        extension = data.pop("photo_extension")
+        key = f"{uuid.uuid4()}.{extension}"
+        full_file_path = os.path.join(TEMP_FILE_FOLDER, key)
+        decode_photo(full_file_path, photo)
+        url = s3.upload_photo(full_file_path, key, extension)
+        data["photo_url"] = url
         c = ComplaintModel(**data)
         db.session.add(c)
         db.session.flush()

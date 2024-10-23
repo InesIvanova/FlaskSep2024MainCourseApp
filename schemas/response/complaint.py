@@ -10,3 +10,4 @@ class ComplaintResponseSchema(BaseComplaint):
     status = EnumField(State, by_value=True)
     complainer_id = fields.Integer(required=True)
     create_on = fields.DateTime(required=True)
+    photo_url = fields.URL(required=True)

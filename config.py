@@ -19,3 +19,4 @@ class DevelopmentConfig:
         f"postgresql://{config('DB_USER')}:{config('DB_PASSWORD')}"
         f"@localhost:{config('DB_PORT')}/{config('DB_NAME')}"
     )
+    PRESERVE_CONTEXT_ON_EXCEPTION = False

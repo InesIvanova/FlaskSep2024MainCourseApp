@@ -3,6 +3,8 @@ from flask import Flask
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_restful import Api
+from sqlalchemy.exc import IntegrityError,
+from werkzeug.exceptions import Conflict
 
 from db import db
 from resources.routes import routes
@@ -22,7 +24,14 @@ CORS(app)
 @app.teardown_appcontext
 def close_request(response):
     db.session.commit()
+    # except IntegrityError as ex:
+    #     raise Conflict("My message")
     return response
+
+
+@app.errorhandler(IntegrityError)
+def your_exception_handler(exception):
+    return "Some"
 
 
 [api.add_resource(*route) for route in routes]
