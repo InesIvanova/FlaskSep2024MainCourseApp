@@ -21,11 +21,6 @@ api = Api(app)
 CORS(app)
 
 
-
-
-
-
-
 @app.teardown_appcontext
 def close_request(response):
     db.session.commit()
