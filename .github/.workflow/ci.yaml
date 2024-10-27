@@ -1,0 +1,47 @@
+name: Python complaint system
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15.0
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ines123
+          POSTGRES_DB: complaintSystemStorageTesting
+        ports:
+          - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.9"
+    - name: Install dependencies and test
+      env:
+        DB_USER: postgres
+        DB_PASSWORD: ines123
+        DB_PORT: '5432'
+        DB_NAME: 'complaintSystemStorageTesting'
+        SECRET_KEY: ""
+        AWS_ACCESS_KEY: ""
+        AWS_SECRET: ""
+        AWS_BUCKET: ""
+        AWS_REGION: ""
+        WISE_TOKEN: ""
+        WISE_URL: ""
+#        POSTGRES_PASSWORD: {your password}
+#        POSTGRES_USER: {your user}
+#        POSTGRES_DB: test_db
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        export PGPASSWORD="ines123"
+        pytest
