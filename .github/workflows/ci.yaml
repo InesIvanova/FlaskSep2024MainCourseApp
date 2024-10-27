@@ -30,13 +30,20 @@ jobs:
         DB_PASSWORD: ines123
         DB_PORT: '5432'
         DB_NAME: 'complaintSystemStorageTesting'
+        TEST_DB_USER: "postgres"
+        TEST_DB_PASSWORD: "ines123"
+        TEST_DB_PORT: 5432
+        TEST_DB_NAME: "complaintSystemStorageTesting"
         SECRET_KEY: ""
+        CONFIG_ENV: "config.TestingConfig"
         AWS_ACCESS_KEY: ""
         AWS_SECRET: ""
         AWS_BUCKET: ""
         AWS_REGION: ""
-        WISE_TOKEN: ""
+        WISE_API_KEY: ""
         WISE_URL: ""
+        WISE_PROFILE_ID: ""
+        EMAIL_SENDER: ""
 #        POSTGRES_PASSWORD: {your password}
 #        POSTGRES_USER: {your user}
 #        POSTGRES_DB: test_db
