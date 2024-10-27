@@ -43,7 +43,7 @@ class TestApp(TestCase):
             else:
                 resp = self.client.delete(url)
             expected_message = {"message": "Invalid or missing token"}
-            self.assertEqual(resp.status_code, 403)
+            self.assertEqual(resp.status_code, 401)
             self.assertEqual(resp.json, expected_message)
 
     def test_protected_admin_endpoints_require_admin_rights(self):
