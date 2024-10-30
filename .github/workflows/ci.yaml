@@ -44,9 +44,6 @@ jobs:
         WISE_URL: ""
         WISE_PROFILE_ID: ""
         EMAIL_SENDER: ""
-#        POSTGRES_PASSWORD: {your password}
-#        POSTGRES_USER: {your user}
-#        POSTGRES_DB: test_db
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
