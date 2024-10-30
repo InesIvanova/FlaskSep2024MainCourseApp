@@ -15,6 +15,8 @@ from services.wise import WiseService
 from util.helpers import decode_photo
 
 wise_service = WiseService()
+s3 = S3Service()
+ses = SESService()
 
 
 class ComplainerManager:
@@ -29,6 +31,7 @@ class ComplainerManager:
 
     @staticmethod
     def register(complainer_data):
+        # TODO use mocking - uncomment the ses
         complainer_data["password"] = generate_password_hash(
             complainer_data["password"], method="pbkdf2:sha256"
         )
@@ -36,12 +39,11 @@ class ComplainerManager:
         user = UserModel(**complainer_data)
         db.session.add(user)
         db.session.flush()
-        ses = SESService()
-        ses.send_email(
-            recipient=complainer_data["email"],
-            subject=f"Welcome, {complainer_data['first_name']} {complainer_data['last_name']}",
-            content="Welcome to our complain system. You can now login and submit complains!",
-        )
+        # ses.send_email(
+        #     recipient=complainer_data["email"],
+        #     subject=f"Welcome, {complainer_data['first_name']} {complainer_data['last_name']}",
+        #     content="Welcome to our complain system. You can now login and submit complains!",
+        # )
         return AuthManager.encode_token(user)
 
     @staticmethod
@@ -59,8 +61,6 @@ class ComplainerManager:
         key = f"{uuid.uuid4()}.{extension}"
         full_file_path = os.path.join(TEMP_FILE_FOLDER, key)
         decode_photo(full_file_path, photo)
-        s3 = S3Service()
-
         url = s3.upload_photo(full_file_path, key, extension)
         data["photo_url"] = url
         c = ComplaintModel(**data)

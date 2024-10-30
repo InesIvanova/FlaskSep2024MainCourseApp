@@ -15,4 +15,4 @@ class User(Resource):
     def post(self):
         data = request.get_json()
         UserManager.create_user(data)
-        return 201
+        return {"message": "Created"}, 201
