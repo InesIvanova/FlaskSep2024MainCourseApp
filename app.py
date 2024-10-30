@@ -1,22 +1,12 @@
 from decouple import config
-from flask import Flask, jsonify
-from flask_cors import CORS
-from flask_migrate import Migrate
-from flask_restful import Api
+from flask import jsonify
 
+from config import create_app
 from db import db
-from resources.routes import routes
 
 
 environment = config("CONFIG_ENV")
-app = Flask(__name__)
-app.config.from_object(environment)
-db.init_app(app)
-migrate = Migrate(app, db)
-
-api = Api(app)
-
-CORS(app)
+app = create_app(environment)
 
 
 @app.teardown_request
@@ -73,6 +63,3 @@ def shutdown_session(response, exception=None):
     """
     db.session.remove()
     return response
-
-
-[api.add_resource(*route) for route in routes]

@@ -27,7 +27,7 @@ class UserCreateRequestSchema(UserRegisterSchema):
                 "You must append certificate for approver user",
                 field_names=["certificate"],
             )
-        if data["role"] == "admin":
+        if data["role"] == "admin" and "certificate" in data:
             raise ValidationError(
                 "Admins should not have certificate",
                 field_names=["certificate"],
@@ -46,4 +46,3 @@ class PasswordChangeSchema(Schema):
                 "New password cannot be the same as the old password.",
                 field_names=["new_password"],
             )
-

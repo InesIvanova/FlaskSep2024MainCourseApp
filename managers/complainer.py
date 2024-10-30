@@ -31,6 +31,7 @@ class ComplainerManager:
 
     @staticmethod
     def register(complainer_data):
+        # TODO use mocking - uncomment the ses
         complainer_data["password"] = generate_password_hash(
             complainer_data["password"], method="pbkdf2:sha256"
         )
@@ -38,11 +39,11 @@ class ComplainerManager:
         user = UserModel(**complainer_data)
         db.session.add(user)
         db.session.flush()
-        ses.send_email(
-            recipient=complainer_data["email"],
-            subject=f"Welcome, {complainer_data['first_name']} {complainer_data['last_name']}",
-            content="Welcome to our complain system. You can now login and submit complains!",
-        )
+        # ses.send_email(
+        #     recipient=complainer_data["email"],
+        #     subject=f"Welcome, {complainer_data['first_name']} {complainer_data['last_name']}",
+        #     content="Welcome to our complain system. You can now login and submit complains!",
+        # )
         return AuthManager.encode_token(user)
 
     @staticmethod
